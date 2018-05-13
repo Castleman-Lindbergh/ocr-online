@@ -9,3 +9,19 @@ function vectorize(image) {
 	}
 	return v;
 }
+
+function dot(a, b) {
+	
+}
+
+function add(a, b) {
+
+}
+
+function sig(a) {
+
+}
+
+function softMax(a) {
+	
+}

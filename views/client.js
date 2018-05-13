@@ -1,8 +1,8 @@
 
-// var socket = io();
-// socket.on('net', function(data) {
-// 	net = new NeuralNetwork(data.network);
-// });
+var socket = io();
+socket.on('net', function(data) {
+	net = new NeuralNetwork(data.network);
+});
 
 var IMAGE_RES = 28;
 var net;
@@ -22,6 +22,7 @@ function setup() {
 	w = width / IMAGE_RES;
 	canvas.position(0, 0);
 	canvas.style('z-index', '-1');
+	noStroke();
 }
 
 function draw() {
