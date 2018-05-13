@@ -35,8 +35,7 @@ function NeuralNetwork(serialization) {
 			this.b.push([]);
 			// for each bias
 			for (var j = 0; j < this.params[l + 1]; j++) {
-				this.b[l].push([]);
-				this.b[l][j][0] = parseFloat(specs.shift());
+				this.b[l][j] = parseFloat(specs.shift());
 			}
 		}
 

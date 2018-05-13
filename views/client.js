@@ -61,3 +61,16 @@ function mouseDragged() {
 		}
 	}
 }
+
+$(document).ready(function() {
+	$('#test').click(function() {
+		var v = vectorize(handwriting);
+		var out = net.forwardPass(v);
+
+		console.log(out);
+	});
+
+	$('#reset').click(function() {
+		resetGrid();
+	});
+});
