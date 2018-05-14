@@ -65,3 +65,24 @@ function softMax(a) {
 	
 	return c;
 }
+
+// sort output vector by confidence
+function order(output) {
+	var swp = true;
+	while (swp) {
+		swp = false;
+		for (var i = 0; i < output.length - 1; i++) {
+			if (output[i].confidence < output[i + 1].confidence) {
+				swap(output, i, i + 1);
+				swp = true;
+			}
+		}
+	}
+}
+
+// swap two array elements
+function swap(a, i1, i2) {
+	var z = a[i1];
+	a[i1] = a[i2];
+	a[i2] = z;
+}
