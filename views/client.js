@@ -15,7 +15,7 @@ for (var i = 0; i < IMAGE_RES; i++) {
 function setup() {
 	var canvas = createCanvas(windowWidth / 2, windowHeight);
 	w = width / IMAGE_RES;
-	canvas.position(0, 0);
+	canvas.position(windowWidth / 2, 0);
 	canvas.style('z-index', '-1');
 	noStroke();
 }
@@ -107,28 +107,25 @@ function recenter() {
 }
 
 $(document).ready(function() {
+	// construct network
 	var socket = io();
 	socket.on('net', function(data) {
 		net = new NeuralNetwork(data.network);
 	});
 
-	$('#test').click(function() {
+	// run classification
+	$('#classify').click(function() {
 		recenter();
-		var v = vectorize(handwriting);
-		var guess = net.forwardPass(v);
+		var x = vectorize(handwriting);
+		var y = net.forwardPass(x);
 
-		for (var i = 0; i < guess.length; i++) {
-			guess[i] = {digit: i, confidence: guess[i] * 100};
-		}
-
-		order(guess);
-
-		console.log("---------------------");
-		for (var i = 0; i < guess.length; i++) {
-			console.log(guess[i].digit + ": " + guess[i].confidence.toFixed(2) + "%");
+		for (var i = 0; i < y.length; i++) {
+			$('#' + i).attr("value", y[i] * 100);
+			$('#' + i + 'p').text((y[i] * 100).toFixed(2) + '%');
 		}
 	});
 
+	// reset grid to black
 	$('#reset').click(function() {
 		resetGrid();
 	});
