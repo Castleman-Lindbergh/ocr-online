@@ -4,10 +4,47 @@ button {
 	border: none;
 	width: 150px;
 	height: 50px;
+	color: rgb(220, 220, 220);
+	font-size: 25px;
+	margin-bottom: 20px;
+	font-family: 'Share Tech Mono', monospace;
+}
 
+#guess {
+	font-family: 'Share Tech Mono', monospace;
+	font-size: 40px;
+}
+
+progress {
+	width: 40%;
+	height: 30px;
+	margin-right: 10px;
+	margin-left: 5px;
+
+	border: none;
+	background-color: rgb(90, 90, 90);
+}
+
+progress::-moz-progress-bar { background: rgb(26, 163, 255); }
+
+progress::-webkit-progress-value { background: rgb(26, 163, 255); }
+
+#classifications {
+	font-size: 25px;
+	font-family: 'Share Tech Mono', monospace;
+	margin-top: 20px;
 }
 
 body {
-	background-color: rgb(150, 150, 150);
-	/*font-family: 'Quicksand', sans-serif;*/
+	background-color: rgb(50, 50, 50);
+	color: rgb(220, 220, 220);
+	-webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+
+    line-height: 40px;
 }

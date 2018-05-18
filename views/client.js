@@ -25,6 +25,10 @@ function draw() {
 	drawGrid();
 }
 
+function keyPressed() {
+	if (keyCode === ENTER) classify();
+}
+
 // set grid values to 0
 function resetGrid() {
 	for (var r = 0; r < handwriting.length; r++) {
@@ -108,7 +112,25 @@ function recenter() {
 	handwriting = copy;
 }
 
+// run classification on current handwriting state
+function classify() {
+	recenter();
+	var x = vectorize(handwriting);
+	var y = net.forwardPass(x);
+	var max = 0;
+
+	for (var i = 0; i < y.length; i++) {
+		$('#' + i).attr("value", y[i] * 100);
+		$('#' + i + 'p').text((y[i] * 100).toFixed(2) + '%');
+		if (y[i] > y[max]) max = i;
+	}
+
+	$('#guess').text("That's a " + max + ".");
+	reset = true;
+}
+
 $(document).ready(function() {
+
 	// construct network
 	var socket = io();
 	socket.on('net', function(data) {
@@ -117,15 +139,10 @@ $(document).ready(function() {
 
 	// run classification
 	$('#classify').click(function() {
-		recenter();
-		var x = vectorize(handwriting);
-		var y = net.forwardPass(x);
+		classify();
+	});
 
-		for (var i = 0; i < y.length; i++) {
-			$('#' + i).attr("value", y[i] * 100);
-			$('#' + i + 'p').text((y[i] * 100).toFixed(2) + '%');
-		}
-
-		reset = true;
+	$(window).resize(function() {
+		setup();
 	});
 });
