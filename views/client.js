@@ -2,6 +2,7 @@
 var IMAGE_RES = 28;
 var net;
 var w;
+var reset;
 
 // initialize image grid
 var handwriting = new Array(IMAGE_RES);
@@ -45,6 +46,7 @@ function drawGrid() {
 
 // change grid values when mouse dragged
 function mouseDragged() {
+	if (reset) resetGrid(), reset = false;
 	for (var r = 0; r < IMAGE_RES; r++) {
 		for (var c = 0; c < IMAGE_RES; c++) {
 			if (mouseX > c * w && mouseX < c * w + w && mouseY > r * w && mouseY < r * w + w) {
@@ -123,10 +125,7 @@ $(document).ready(function() {
 			$('#' + i).attr("value", y[i] * 100);
 			$('#' + i + 'p').text((y[i] * 100).toFixed(2) + '%');
 		}
-	});
 
-	// reset grid to black
-	$('#reset').click(function() {
-		resetGrid();
+		reset = true;
 	});
 });
