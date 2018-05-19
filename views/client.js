@@ -3,6 +3,7 @@ var IMAGE_RES = 28;
 var net;
 var w;
 var reset;
+var penSize = 50;
 
 // initialize image grid
 var handwriting = new Array(IMAGE_RES);
@@ -19,38 +20,9 @@ function setup() {
 	w = width / IMAGE_RES;
 	canvas.position(windowWidth / 2, (windowHeight - height) / 2);
 	canvas.style('z-index', '-1');
+	pixelDensity(1);
 	noStroke();
 	background(0);
-}
-
-function downSize() {
-	var SUB_RES = floor(width / 28);
-	console.log("Sub resolution: " + SUB_RES);
-
-	loadPixels();
-
-	for (var r_start = 0; r_start < SUB_RES * IMAGE_RES; r_start += SUB_RES) {
-		for (var c_start = 0; c_start < SUB_RES * IMAGE_RES; c_start += SUB_RES) {
-			// set lower res pixel value to average of subimage values
-			handwriting[r_start / SUB_RES][c_start / SUB_RES] = getAvg(r_start, c_start, SUB_RES);
-		}
-	}
-
-	updatePixels();
-}
-
-function getAvg(r_start, c_start, sub) {
-	var sum = 0;
-	for (var r = r_start; r < r_start + sub; r++) {
-		for (var c = c_start; c < c_start + sub; c++) {
-			sum += pixels[4 * (c + (r * width))];
-		}
-	}
-	return sum / (sub * sub);
-}
-
-function keyPressed() {
-	if (keyCode === ENTER) classify();
 }
 
 // set grid values to 0
@@ -72,75 +44,43 @@ function drawGrid() {
 			rect(c * w, r * w, w, w);
 		}
 	}
-	fill(255);
 }
 
-// change grid values when mouse dragged
-function mouseDragged() {
-	if (reset) resetGrid(), reset = false;
-	ellipse(mouseX, mouseY, 50, 50);
-
-}
-
-// calculate coordinates of center of mass of image
-function getCOM(img) {
-	var Xweighted = 0, Yweighted = 0;
-	var netMass = 0;
-
-	for (var r = 0; r < IMAGE_RES; r++) {
-		for (var c = 0; c < IMAGE_RES; c++) {
-			if (img[r][c] > 0) {
-				netMass++;
-				Xweighted += c;
-				Yweighted += r;
-			}
-		}
-	}
-
-	return {xcom: Math.floor(Xweighted / netMass), ycom: Math.floor(Yweighted / netMass)};
-}
-
-// recenter image so center of mass is at center of 28x28 grid
-function recenter() {
-	var com = getCOM(handwriting);
-	var dx = 13 - com.xcom, dy = 13 - com.ycom;
-
-	var copy = new Array(IMAGE_RES);
-	for (var r = 0; r < IMAGE_RES; r++) {
-		copy[r] = new Array(IMAGE_RES);
-		for (var c = 0; c < IMAGE_RES; c++) {
-			if (handwriting[r - dy] && handwriting[r - dy][c - dx]) {
-				copy[r][c] = handwriting[r - dy][c - dx];
-			} else {
-				copy[r][c] = 0;
-			}
-		}
-	}
-
-	handwriting = copy;
-}
-
-// run classification on current handwriting state
+// run classification on current handwriting state, render result
 function classify() {
+	// preprocess by reducing image resolution, centering by center of mass
 	downSize();
 	recenter();
 	drawGrid();
+
+	// pass vectorized image through network
 	var x = vectorize(handwriting);
 	var y = net.forwardPass(x);
 	var max = 0;
 
+	// update UI sliders / keep track of final classification
 	for (var i = 0; i < y.length; i++) {
 		$('#' + i).attr("value", y[i] * 100);
 		$('#' + i + 'p').text((y[i] * 100).toFixed(2) + '%');
 		if (y[i] > y[max]) max = i;
 	}
 
+	// render classification
 	$('#guess').text("That's a " + max + ".");
-	reset = true;
+	reset = true;	// allow grid to be reset
+}
+
+// press enter to classify
+function keyPressed() { if (keyCode === ENTER) classify(); }
+
+// draw when mouse dragged
+function mouseDragged() {
+	fill(255);
+	if (reset) resetGrid(), reset = false;
+	ellipse(mouseX, mouseY, penSize, penSize);
 }
 
 $(document).ready(function() {
-
 	// construct network
 	var socket = io();
 	socket.on('net', function(data) {
@@ -152,6 +92,7 @@ $(document).ready(function() {
 		classify();
 	});
 
+	// reset canvas each time window is altered
 	$(window).resize(function() {
 		setup();
 	});
