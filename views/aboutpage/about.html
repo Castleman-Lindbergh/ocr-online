@@ -2,6 +2,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
+	<base target="_blank">
 	<title>Castleman-Lindbergh OCR</title>
 
 	<!-- google font -->
@@ -10,5 +11,46 @@
 </head>
 <body>
 	<h1>How?</h1>
+
+	<div>
+		<img id="mnist" src="http://harshthaker.com/wp-content/uploads/2017/12/MNIST.jpg" width="30%">
+
+		<p>This classifier is trained on 60,000 handwritten digits, and was built entirely by <a href="https://github.com/thomascastleman">Thomas Castleman</a> and <a href="https://github.com/johnnylindbergh">Johnny Lindbergh</a>.</p>
+
+		<p>The processed input from the on-screen canvas is passed through a feed-forward neural network, which makes the classification. The network exists in a serialized state on the server, which is then reconstructed client-side.</p>
+
+		<p>The trained network was obtained using Castleman and Lindbergh's <a href="https://github.com/thomascastleman/fancy-regression">original classifier</a>, written in C, which was built to train on the <a href="http://yann.lecun.com/exdb/mnist/">MNIST database</a> (pictured left).</p>
+
+	</div>
+
+	<br>
+	<h3>Pre-processing</h3>
+
+	<p>Before an image can be passed through the network, it must be compressed to a 28x28 resolution, to match the MNIST format.</p>
+
+	<p>Upon request to classify, the image data from the canvas is reduced to this resolution by averaging the pixel intensity of subsections of the image (using the p5.js graphics library). This resulting image is then center by its center of mass</p>
+
+	<center>
+		<figure>
+			<img width="20%" src="aboutpage/pre.png">
+			<img width="20%" src="aboutpage/post.png">
+			<figcaption>Image before and after preprocessing.</figcaption>
+		</figure>
+	</center>
+
+	<p>From here the image is vectorized and passed through the network.</p>
+
+	<h3>The network</h3>
+
+	<p>The current network in deployment has three layers, with 784 input neurons, 50 hidden neurons, and 10 output neurons. It was trained on 60,000 training pairs with over 10 epochs, with a learning rate of 0.05 and batch size of 10.</p>
+
+	<p>Upon testing over 10,000 previously unseen pairs, this network achieved 89.1% accuracy overall.</p>
+
+	<p>The softmax function was used to format the network's ouput into a vector representing confidences of classification.</p>
+
+	<p>The C implementation features Gaussian initialization for weights and biases, an interface for interacting with a CSV version of the MNIST database, serialization and reconstruction of a network, and, of course, a training algorithm using backpropagation and gradient descent.</p>
+
+	<p>All functionality, including matrix operations, was implemented by Castleman and Lindbergh, and no libraries beyond the standard C libraries were used.</p>
+
 </body>
 </html>
