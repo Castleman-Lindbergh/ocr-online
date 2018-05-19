@@ -23,7 +23,15 @@ function readNetSerialization(callback) {
 }
 
 app.get('/', function(req, res) {
-	res.render('client.html');
+	res.render('mainpage/client.html');
+});
+
+app.get('/about', function(req, res) {
+	res.render('aboutpage/about.html');
+});
+
+app.get('*', function(req, res) {
+	res.redirect('/');
 });
 
 io.on('connection', function(socket) {
