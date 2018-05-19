@@ -18,7 +18,7 @@
 
 		<p>This classifier is trained on 60,000 handwritten digits, and was built entirely by <a href="https://github.com/thomascastleman">Thomas Castleman</a> and <a href="https://github.com/johnnylindbergh">Johnny Lindbergh</a>.</p>
 
-		<p>The processed input from the on-screen canvas is passed through a feed-forward neural network, which makes the classification. The network exists in a serialized state on the server, which is then reconstructed client-side.</p>
+		<p>The processed input from the on-screen canvas is passed through a feed-forward neural network, which makes the classification. The network exists in a serialized state on the server, and is reconstructed client-side.</p>
 
 		<p>The trained network was obtained using Castleman and Lindbergh's <a href="https://github.com/thomascastleman/fancy-regression">original classifier</a>, written in C, which was built to train on the <a href="http://yann.lecun.com/exdb/mnist/">MNIST database</a> (pictured left).</p>
 
@@ -29,7 +29,7 @@
 
 	<p>Before an image can be passed through the network, it must be compressed to a 28x28 resolution, to match the MNIST format.</p>
 
-	<p>Upon request to classify, the image data from the canvas is reduced to this resolution by averaging the pixel intensity of subsections of the image (using the p5.js graphics library). This resulting image is then center by its center of mass</p>
+	<p>Upon request to classify, the image data from the canvas is reduced to this resolution by averaging the pixel intensity of subsections of the image (using the p5.js graphics library). This resulting image is then centered by its center of mass</p>
 
 	<center>
 		<figure>
