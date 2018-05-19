@@ -31,10 +31,10 @@ a:link, a:visited {
 	margin-right: 20px;
 }
 
-#back {
+.back {
 	font-size: 25px;
 }
 
-#linkback {
+.linkback {
 	text-decoration: none;
 }
