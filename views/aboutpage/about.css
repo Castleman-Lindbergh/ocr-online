@@ -30,3 +30,11 @@ a:link, a:visited {
 	margin-left: 15px;
 	margin-right: 20px;
 }
+
+#back {
+	font-size: 25px;
+}
+
+#linkback {
+	text-decoration: none;
+}

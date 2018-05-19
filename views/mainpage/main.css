@@ -48,3 +48,42 @@ body {
 
     line-height: 40px;
 }
+
+a:link, a:visited {
+	color: rgb(240, 240, 240);
+	font-weight: bold;
+}
+
+#about {
+	position: fixed;
+	left: 0;
+	bottom: 0;
+	font-size: 40px;
+	padding: 10px;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 500px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+
+    top: 105%;
+    left: 25%;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}

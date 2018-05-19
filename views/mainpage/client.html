@@ -21,7 +21,11 @@
 	<link rel="stylesheet" type="text/css" href="mainpage/main.css">
 </head>
 <body>
-	<h1>The Castleman-Lindbergh Digit Classifier</h1>
+	<div class="tooltip">
+		<h1>The Castleman-Lindbergh Digit Classifier</h1>
+		<span class="tooltiptext">Click and drag in the righthand box to draw a digit and press "Classify" or the enter key to run.</span>
+	</div>
+	<br>
 	<button id="classify">Classify</button><br>
 	<strong><span id="guess"></span></strong><br>
 	<div id="classifications">
@@ -36,5 +40,7 @@
 		8 <progress id="8" value="0" max="100"></progress><span id="8p"></span><br>
 		9 <progress id="9" value="0" max="100"></progress><span id="9p"></span><br>
 	</div>
+
+	<a href="/about"><div id="about">?</div></a>
 </body>
 </html>
