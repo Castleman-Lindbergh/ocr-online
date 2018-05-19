@@ -14,15 +14,39 @@ for (var i = 0; i < IMAGE_RES; i++) {
 }
 
 function setup() {
-	var canvas = createCanvas(windowWidth / 2, windowHeight);
+	var DIM = windowWidth / 2 < windowHeight ? windowWidth / 2 : windowHeight;
+	var canvas = createCanvas(DIM, DIM);
 	w = width / IMAGE_RES;
-	canvas.position(windowWidth / 2, 0);
+	canvas.position(windowWidth / 2, (windowHeight - height) / 2);
 	canvas.style('z-index', '-1');
 	noStroke();
+	background(0);
 }
 
-function draw() {
-	drawGrid();
+function downSize() {
+	var SUB_RES = floor(width / 28);
+	console.log("Sub resolution: " + SUB_RES);
+
+	loadPixels();
+
+	for (var r_start = 0; r_start < SUB_RES * IMAGE_RES; r_start += SUB_RES) {
+		for (var c_start = 0; c_start < SUB_RES * IMAGE_RES; c_start += SUB_RES) {
+			// set lower res pixel value to average of subimage values
+			handwriting[r_start / SUB_RES][c_start / SUB_RES] = getAvg(r_start, c_start, SUB_RES);
+		}
+	}
+
+	updatePixels();
+}
+
+function getAvg(r_start, c_start, sub) {
+	var sum = 0;
+	for (var r = r_start; r < r_start + sub; r++) {
+		for (var c = c_start; c < c_start + sub; c++) {
+			sum += pixels[4 * (c + (r * width))];
+		}
+	}
+	return sum / (sub * sub);
 }
 
 function keyPressed() {
@@ -31,6 +55,7 @@ function keyPressed() {
 
 // set grid values to 0
 function resetGrid() {
+	background(0);
 	for (var r = 0; r < handwriting.length; r++) {
 		for (var c = 0; c < handwriting[r].length; c++) {
 			handwriting[r][c] = 0;
@@ -40,37 +65,20 @@ function resetGrid() {
 
 // display grid on screen
 function drawGrid() {
+	background(0);
 	for (var r = 0; r < handwriting.length; r++) {
 		for (var c = 0; c < handwriting[r].length; c++) {
 			fill(handwriting[r][c]);
 			rect(c * w, r * w, w, w);
 		}
 	}
+	fill(255);
 }
 
 // change grid values when mouse dragged
 function mouseDragged() {
 	if (reset) resetGrid(), reset = false;
-	for (var r = 0; r < IMAGE_RES; r++) {
-		for (var c = 0; c < IMAGE_RES; c++) {
-			if (mouseX > c * w && mouseX < c * w + w && mouseY > r * w && mouseY < r * w + w) {
-				drawAt(r, c);
-			}
-		}
-	}
-}
-
-function drawAt(r, c) {
-	handwriting[r][c] = 255;
-	if (r + 1 < IMAGE_RES && handwriting[r + 1][c] == 0) handwriting[r + 1][c] = 200;
-	if (r - 1 > -1 && handwriting[r - 1][c] == 0) handwriting[r - 1][c] = 200;
-	if (c + 1 < IMAGE_RES && handwriting[r][c + 1] == 0) handwriting[r][c + 1] = 200;
-	if (c - 1 > -1 && handwriting[r][c - 1] == 0) handwriting[r][c - 1] = 200;
-
-	if (r + 1 < IMAGE_RES && c + 1 < IMAGE_RES && handwriting[r + 1][c + 1] == 0) handwriting[r + 1][c + 1] = 170;
-	if (r - 1 > -1 && c + 1 < IMAGE_RES && handwriting[r - 1][c + 1] == 0) handwriting[r - 1][c + 1] = 170;
-	if (r + 1 < IMAGE_RES && c - 1 > -1 && handwriting[r + 1][c - 1] == 0) handwriting[r + 1][c - 1] = 170;
-	if (r - 1 > -1 && c - 1 > -1 && handwriting[r - 1][c - 1] == 0) handwriting[r - 1][c - 1] = 170;
+	ellipse(mouseX, mouseY, 50, 50);
 
 }
 
@@ -114,7 +122,9 @@ function recenter() {
 
 // run classification on current handwriting state
 function classify() {
+	downSize();
 	recenter();
+	drawGrid();
 	var x = vectorize(handwriting);
 	var y = net.forwardPass(x);
 	var max = 0;
