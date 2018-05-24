@@ -9,7 +9,7 @@ body {
 }
 
 h1 {
-	font-size: 50px;
+	font-size: 40px;
 }
 
 h3 {
@@ -25,10 +25,11 @@ a:link, a:visited {
 	font-weight: bold;
 }
 
-#mnist {
+#classifier {
 	float: left;
 	margin-left: 15px;
 	margin-right: 20px;
+	border-color: rgb(200, 200, 200);
 }
 
 .back {
